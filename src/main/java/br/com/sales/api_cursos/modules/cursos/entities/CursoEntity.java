@@ -11,10 +11,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Builder.Default;
 
 @Entity(name = "curso")
 @Data
+@Builder
 public class CursoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
