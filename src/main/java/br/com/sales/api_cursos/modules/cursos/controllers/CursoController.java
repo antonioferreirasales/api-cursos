@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.sales.api_cursos.modules.cursos.dto.CreateCursoRequestDTO;
+import br.com.sales.api_cursos.modules.cursos.dto.CreateCursoResponseDTO;
 import br.com.sales.api_cursos.modules.cursos.entities.CursoEntity;
 
 @RestController
@@ -20,15 +21,18 @@ public class CursoController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> create(@RequestBody CreateCursoRequestDTO cursoEntity) {
+    public ResponseEntity<Object> create(@RequestBody CreateCursoRequestDTO createCursoEntity) {
         try {
-            var requestEntity = CursoEntity.builder().name(cursoEntity.name())
-                    .category(cursoEntity.category()).active(true).build();
-            var savedCurso = this.createCursoUseCase.execute(requestEntity);
-            return ResponseEntity.ok(savedCurso);
+            var requestEntity = CursoEntity.builder().name(createCursoEntity.name())
+                    .category(createCursoEntity.category()).active(true).build();
+            var cursoEntity = this.createCursoUseCase.execute(requestEntity);
+            var response = CreateCursoResponseDTO.builder().id(cursoEntity.getId()).name(cursoEntity.getName())
+                    .category(cursoEntity.getCategory())
+                    .active(cursoEntity.isActive()).createdAt(cursoEntity.getCreatedAt())
+                    .updatedAt(cursoEntity.getUpdatedAt()).build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 }
